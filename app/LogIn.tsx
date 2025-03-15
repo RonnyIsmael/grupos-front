@@ -104,29 +104,24 @@ const LogIn = () => {
               ¿Has olvidado la contraseña?
             </Text>
           </View>
-
-          <View
+          <Pressable
+            onPress={handleLogin}
             style={{ height: hp(6.5) }}
-            className="bg-emerald-400 rounded-xl justify-center items-center"
+            className=" flex active:bg-emerald-500 bg-emerald-400 rounded-xl justify-center items-center"
           >
             {loading ? (
               <View className="flex-row ">
                 <Loading />
               </View>
             ) : (
-              <Pressable
-                onPress={handleLogin}
-                className=" active:bg-emerald-500"
+              <Text
+                style={{ fontSize: hp(2.7) }}
+                className="text-neutral-900 font-bold tracking-wider "
               >
-                <Text
-                  style={{ fontSize: hp(2.7) }}
-                  className="text-neutral-900 font-bold tracking-wider "
-                >
-                  Acceder
-                </Text>
-              </Pressable>
+                Acceder
+              </Text>
             )}
-          </View>
+          </Pressable>
           <View className="flex-row justify-center">
             <Text
               style={{ fontSize: hp(1.8) }}

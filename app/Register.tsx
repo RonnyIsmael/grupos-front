@@ -14,8 +14,8 @@ import CustomKeyboardView from "../components/CustomKeyboardView";
 
 const Register = () => {
   const router = useRouter();
-  const { register } = useAuth();
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, register } = useAuth();
+  const {} = useAuth();
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const userNameRef = useRef("");
@@ -40,9 +40,9 @@ const Register = () => {
     );
     setLoading(false);
 
-    console.log("register: " + response);
     if (!response.succes) {
       Alert.alert("No se pudo registrar.");
+      return;
     }
     Alert.alert(
       "Notificación",

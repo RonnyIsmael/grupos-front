@@ -15,8 +15,11 @@ const MainLayout = () => {
     if (typeof isAuthenticated == "undefined") return;
     const inApp = segments[0] == "(app)";
     if (isAuthenticated && !inApp) {
+      console.log("1");
       router.replace("Grupos");
-    } else if (!isAuthenticated) {
+    }
+    if (!isAuthenticated) {
+      console.log("2");
       router.replace("LogIn");
     }
   }, [isAuthenticated]);

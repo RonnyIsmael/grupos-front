@@ -1,3 +1,5 @@
+import { API_URL } from "../utils/config";
+
 async function postRequest(url: string | URL | Request, data: string) {
   try {
     // Asegurarse de que jsonStr es un string JSON válido
@@ -30,7 +32,6 @@ async function postRequest(url: string | URL | Request, data: string) {
   }
 }
 
-const API_BASE_URL = "http://192.168.18.5:3000/api"; // Cambia esto según tu API
 async function getRequest(
   endpoint: string,
   params: Record<string, any> = {},
@@ -39,9 +40,7 @@ async function getRequest(
   try {
     // Convertir `params` en una cadena de consulta (query string)
     const queryString = new URLSearchParams(params).toString();
-    const url = `${API_BASE_URL}/${endpoint}${
-      queryString ? `?${queryString}` : ""
-    }`;
+    const url = `${API_URL}/${endpoint}${queryString ? `?${queryString}` : ""}`;
 
     console.log("Fetching:", url); // Debugging
 

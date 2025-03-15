@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { getRequest, postRequest } from "../hooks/api";
 import { User } from "../interfaces/UserInterface";
+import { API_URL } from "../utils/config";
 
 interface AuthContextType {
   user: User | null; // user ahora es de tipo User o null
@@ -31,7 +32,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
   }, []);
 
   const login = async (email: any, password: any) => {
-    const url = "http://192.168.18.5:3000/api/auth/login";
+    const url = `${API_URL}/auth/login`;
     const data = JSON.stringify({
       email: email,
       password: password,
@@ -39,7 +40,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
 
     try {
       const response = await postRequest(url, data);
-      if (response.status != "OK") {
+      if (!response.succes) {
         console.log("Login KO: " + response.msg);
         return { suscces: false, msg: response.msg };
       }
@@ -62,22 +63,22 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
   };
 
   const register = async (username: any, email: any, password: any) => {
-    const url = "http://192.168.18.5:8080/user/signup";
+    const url = `${API_URL}/auth/register`;
     const data = JSON.stringify({
-      user: {
-        userName: username,
-        email: email,
-        password: password,
-      },
+      user_name: username,
+      email: email,
+      password: password,
     });
 
     try {
       const response = await postRequest(url, data);
-      if (response.msg != "OK") {
+      console.log(response);
+      if (!response.succes) {
         return { suscces: false, msg: response.msj };
       }
       console.log("register successful:", response);
-      return { succes: true, data: response?.user };
+      setUser(response.body);
+      return { succes: true, data: response?.body };
     } catch (e: any) {
       console.error("register failed:", e.message);
       return { succes: false, msg: e.message };
@@ -85,7 +86,14 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
   };
 
   const logout = async () => {
-    setIsAuthenticated(false);
+    try {
+      const url = `${API_URL}/auth/logout`;
+      await postRequest(url, "");
+      setIsAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const session = async () => {
