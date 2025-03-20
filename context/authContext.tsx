@@ -8,6 +8,7 @@ import React, {
 import { getRequest, postRequest } from "../hooks/api";
 import { User } from "../interfaces/UserInterface";
 import { API_URL } from "../utils/config";
+import { useRouter } from "expo-router";
 
 interface AuthContextType {
   user: User | null; // user ahora es de tipo User o null
@@ -16,6 +17,9 @@ interface AuthContextType {
   register: (username: string, email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
   setIsAuthenticated: (state: boolean) => void;
+  session: () => Promise<void>;
+  setIsLoading: (state: boolean) => void;
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -26,9 +30,15 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
     undefined
   );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
-    session();
+    router.replace("Auth/LoadApp");
+    setTimeout(() => {
+      session();
+      console.log("Se comprueba sesion al abrir APP");
+    }, 3000);
   }, []);
 
   const login = async (email: any, password: any) => {
@@ -37,7 +47,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
       email: email,
       password: password,
     });
-
+    console.log("inicio de login");
     try {
       const response = await postRequest(url, data);
       if (!response.succes) {
@@ -49,6 +59,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
         id: response.body.id,
         email: response.body.email,
         user_name: response.body.name,
+        avatar: response.body.avatar,
       };
 
       setUser(user);
@@ -97,14 +108,16 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
   };
 
   const session = async () => {
+    setIsLoading(true);
     try {
       const response = await getRequest("auth/session");
-      if ((response.status = "OK")) {
+      if (response.succes) {
         setIsAuthenticated(true);
         const user: User = {
           id: response.body.id,
           email: response.body.email,
           user_name: response.body.name,
+          avatar: response.body.avatar,
         };
         setUser(user);
       } else {
@@ -112,6 +125,8 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
       }
     } catch (error) {
       setIsAuthenticated(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -124,6 +139,9 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
         login,
         register,
         logout,
+        session,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

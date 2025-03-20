@@ -6,11 +6,11 @@ import {
   Text,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import CustomGroupItem from "../../components/CustomGroupItem";
+import CustomGroupItem from "../../../components/CustomGroupItem";
 import { useEffect, useState } from "react";
-import { obtenerListadoGrupos } from "../../services/GruposService";
-import { useAuth } from "../../context/authContext";
-import { UserCountGroup } from "../../interfaces/GruposInterface";
+import { obtenerListadoGrupos } from "../../../services/GruposService";
+import { useAuth } from "../../../context/authContext";
+import { UserCountGroup } from "../../../interfaces/GruposInterface";
 
 const Grupos = () => {
   const { user, isAuthenticated } = useAuth(); // Obtener usuario del contexto

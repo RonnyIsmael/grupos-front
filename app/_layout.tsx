@@ -3,6 +3,7 @@ import "../global.css";
 import { useAuth, AuthContextProvider } from "../context/authContext";
 import { useEffect } from "react";
 import { MenuProvider } from "react-native-popup-menu";
+import * as NavigationBar from "expo-navigation-bar";
 
 const MainLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -10,17 +11,17 @@ const MainLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // check if user is authenticated or not
-    console.log("Se comprueba sesión");
+    NavigationBar.setBackgroundColorAsync("rgb(30, 41, 59)");
+    NavigationBar.setButtonStyleAsync("light");
     if (typeof isAuthenticated == "undefined") return;
-    const inApp = segments[0] == "(app)";
+    const inApp = segments[0] == "(tabs)";
     if (isAuthenticated && !inApp) {
       console.log("1");
       router.replace("Grupos");
     }
     if (!isAuthenticated) {
       console.log("2");
-      router.replace("LogIn");
+      router.replace("Auth/LogIn");
     }
   }, [isAuthenticated]);
   return <Slot />;

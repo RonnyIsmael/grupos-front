@@ -5,12 +5,12 @@ import {
 } from "react-native-responsive-screen";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomInputActions from "../components/CustomInputOcticons";
+import CustomInputActions from "../../components/CustomInputOcticons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import Loading from "../components/Loading";
-import CustomKeyboardView from "../components/CustomKeyboardView";
-import { useAuth } from "../context/authContext";
+import Loading from "../../components/Loading";
+import CustomKeyboardView from "../../components/CustomKeyboardView";
+import { useAuth } from "../../context/authContext";
 
 const LogIn = () => {
   const router = useRouter();
@@ -19,7 +19,6 @@ const LogIn = () => {
   const [loginTry, setLoginTry] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
-  const screenHeight = Dimensions.get("window").height;
 
   const handleLogin = async () => {
     if (!emailRef.current || !passwordRef.current) {

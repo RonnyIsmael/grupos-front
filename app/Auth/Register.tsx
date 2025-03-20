@@ -5,12 +5,12 @@ import {
 } from "react-native-responsive-screen";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomInputActions from "../components/CustomInputOcticons";
+import CustomInputActions from "../../components/CustomInputOcticons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import Loading from "../components/Loading";
-import { useAuth } from "../context/authContext";
-import CustomKeyboardView from "../components/CustomKeyboardView";
+import Loading from "../../components/Loading";
+import { useAuth } from "../../context/authContext";
+import CustomKeyboardView from "../../components/CustomKeyboardView";
 
 const Register = () => {
   const router = useRouter();
