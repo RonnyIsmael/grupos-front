@@ -1,10 +1,13 @@
+import Constants from "expo-constants";
 import { API_URL } from "../utils/config";
+
+const CLOUD_NAME = Constants.expoConfig?.extra?.CLOUDINARY_CLOUD_NAME;
 
 async function postRequest(url: string | URL | Request, data: string) {
   try {
     // Asegurarse de que jsonStr es un string JSON válido
     // Esto lanzará un error si jsonStr no es un JSON válido
-
+    console.log(data);
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -65,4 +68,29 @@ async function getRequest(
   }
 }
 
-export { postRequest, getRequest };
+async function postImage(formData: any) {
+  try {
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al subir imagen");
+    }
+
+    return await response.json();
+    // Aquí puedes hacer una petición POST al backend para guardar la URL
+  } catch (error: any) {
+    console.error("Error al subir la imagen:", error);
+    throw error;
+  }
+}
+
+export { postRequest, getRequest, postImage };

@@ -38,7 +38,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
     setTimeout(() => {
       session();
       console.log("Se comprueba sesion al abrir APP");
-    }, 3000);
+    }, 1000);
   }, []);
 
   const login = async (email: any, password: any) => {

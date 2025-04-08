@@ -33,8 +33,6 @@ const LogIn = () => {
 
     let response = await login(emailRef.current, passwordRef.current);
     setLoading(false);
-
-    console.log("login: " + JSON.stringify(response));
     if (!response.succes) {
       Alert.alert("No se pudo Acceder.");
     }
@@ -43,7 +41,7 @@ const LogIn = () => {
   return (
     <CustomKeyboardView>
       <StatusBar style="light" />
-      <View className="flex-1 bg-slate-800">
+      <View className="flex-1 bg-slate-900">
         <View
           style={{ paddingTop: wp(8), paddingHorizontal: wp(10) }}
           className="items-center"
@@ -128,7 +126,7 @@ const LogIn = () => {
             >
               ¿No tienes una cuenta?
             </Text>
-            <Pressable onPress={() => router.push("Register")}>
+            <Pressable onPress={() => router.push("Auth/Register")}>
               <Text
                 style={{ fontSize: hp(1.8), paddingLeft: hp(1) }}
                 className="font-semibold text-emerald-500"

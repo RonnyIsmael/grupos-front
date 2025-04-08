@@ -21,7 +21,7 @@ import { useAuth } from "../../context/authContext";
 
 const LoadApp = () => {
   return (
-    <View className="flex-1 bg-slate-800">
+    <View className="flex-1 bg-slate-900">
       <StatusBar style="light" />
 
       <View

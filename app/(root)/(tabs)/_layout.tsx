@@ -10,7 +10,7 @@ export default function _layout() {
       screenOptions={{
         tabBarActiveTintColor: "rgb(229 229 229)",
         tabBarStyle: {
-          backgroundColor: "rgb(30 41 59)",
+          backgroundColor: "rgb(15 25 42)",
           borderTopWidth: 0,
         },
       }}

@@ -6,3 +6,8 @@ export interface User {
   register_date?: Date;
   avatar: string;
 }
+export interface UserItem {
+  id: number;
+  user_name: string;
+  avatar: string;
+}

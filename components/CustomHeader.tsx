@@ -1,5 +1,4 @@
 import { View, Text, Platform, Pressable } from "react-native";
-import React, { memo } from "react";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Image } from "expo-image";
@@ -23,14 +22,12 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ name }) => {
     router.push("/Profile");
   };
 
-  const imageUrl = user?.avatar
-    ? `https://drive.google.com/uc?export=view&id=${user.avatar}`
-    : undefined;
+  const imageUrl = user?.avatar ? user.avatar : undefined;
 
   return (
     <View
       style={{ paddingTop: ios ? top : top + 10 }}
-      className="flex-row justify-between px-5 bg-slate-800 pb-6"
+      className="flex-row justify-between px-5 bg-slate-900 pb-6"
     >
       <View className="justify-center">
         <Text

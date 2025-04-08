@@ -1,75 +1,136 @@
 import {
-  ActivityIndicator,
   FlatList,
-  SafeAreaView,
   View,
+  SafeAreaView,
+  ActivityIndicator,
+  RefreshControl,
+  Switch,
   Text,
+  TouchableOpacity,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import CustomGroupItem from "../../../components/CustomGroupItem";
-import { useEffect, useState } from "react";
-import { obtenerListadoGrupos } from "../../../services/GruposService";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../../context/authContext";
+import { obtenerListadoGrupos } from "../../../services/GruposService";
 import { UserCountGroup } from "../../../interfaces/GruposInterface";
+import { StatusBar } from "expo-status-bar";
+import CustomCardItem from "../../../components/CustomCardItem";
+import { useFocusEffect, useRouter } from "expo-router";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const Grupos = () => {
-  const { user, isAuthenticated } = useAuth(); // Obtener usuario del contexto
-
+  const { user, isAuthenticated } = useAuth();
   const [data, setData] = useState<UserCountGroup[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [soloMisGrupos, setSoloMisGrupos] = useState(false);
+  const router = useRouter();
 
-  useEffect(() => {
+  const loadGrupos = useCallback(async () => {
     if (!isAuthenticated || !user?.id) {
-      console.log("Usuario no autenticado.");
+      setData([]);
       setLoading(false);
       return;
     }
-    const loadGrupos = async () => {
-      try {
-        const res: any = await obtenerListadoGrupos(user.id);
-        const grupos: UserCountGroup[] = res.body;
-        console.log(grupos);
-        setData(grupos);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+    setLoading(true);
+    try {
+      const res: any = await obtenerListadoGrupos(user.id);
+      let grupos: UserCountGroup[] = res.body;
+
+      setData(grupos);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [user, isAuthenticated]);
+  useFocusEffect(
+    useCallback(() => {
+      loadGrupos();
+    }, [loadGrupos])
+  );
+
+  useEffect(() => {
     loadGrupos();
-  }, []);
+  }, [loadGrupos]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadGrupos();
+  };
+  const renderGroupItem = ({ item }: { item: UserCountGroup }) => (
+    <View style={{ flex: 0.5 }}>
+      <CustomCardItem
+        id={item.id}
+        name={item.name}
+        userNumbers={item.userNumbers}
+        avatar={item.avatar}
+        sport={item.sport}
+        owner={item.owner}
+      />
+    </View>
+  );
 
   return (
-    <View className="flex-1 bg-slate-800">
+    <View className="flex-1 bg-slate-900">
       <StatusBar style="light" />
-      <SafeAreaView className="flex-1 my-1">
-        {loading ? (
-          <View className="flex-1 justify-center align-middle">
+      <SafeAreaView className="flex-1">
+        <View className="flex-row justify-between items-center my-2 px-2">
+          <Text className="text-lg text-slate-50 font-bold">Mis grupos</Text>
+          <Switch
+            value={soloMisGrupos}
+            onValueChange={setSoloMisGrupos}
+            thumbColor={soloMisGrupos ? "#10b981" : "#f4f4f4"}
+            trackColor={{ false: "#767577", true: "#34d399" }}
+          />
+        </View>
+        {loading && !refreshing ? (
+          <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" color="#ffffff" />
-            <Text style={{ color: "white", marginTop: 10 }}>Cargando...</Text>
-          </View>
-        ) : error ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "red" }}>Error: {error}</Text>
+            <Text className="text-gray-200 mt-2">Cargando...</Text>
           </View>
         ) : (
           <FlatList
-            data={data}
-            renderItem={({ item }) => (
-              <CustomGroupItem
-                name={item.name}
-                avatar={item.avatar}
-                userNumbers={item.userNumbers}
-              />
-            )}
+            data={
+              soloMisGrupos
+                ? data.filter((grupo) => grupo.owner === user?.id)
+                : data
+            }
+            numColumns={2}
             keyExtractor={(item) => item.id.toString()}
-            className="flex-1 gap-4"
+            renderItem={renderGroupItem}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#ffffff"
+              />
+            }
+            contentContainerClassName="pb-20"
           />
         )}
+        <TouchableOpacity
+          onPress={() => router.push("/grupo/Nuevo")}
+          style={{
+            position: "absolute",
+            bottom: 30,
+            right: 20,
+            backgroundColor: "#10b981",
+            width: 60,
+            height: 60,
+            borderRadius: 10,
+            justifyContent: "center",
+            alignItems: "center",
+            elevation: 10,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
+          }}
+        >
+          <MaterialIcons name="group-add" size={28} color="#ffffff" />
+        </TouchableOpacity>
       </SafeAreaView>
     </View>
   );

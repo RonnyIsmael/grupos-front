@@ -61,7 +61,7 @@ const Register = () => {
   return (
     <CustomKeyboardView>
       <StatusBar style="light" />
-      <View className="flex-1  bg-slate-800">
+      <View className="flex-1  bg-slate-900">
         <View
           style={{ paddingTop: wp(8), paddingHorizontal: wp(10) }}
           className="items-center"
@@ -150,7 +150,7 @@ const Register = () => {
             >
               ¿Ya tienes una cuenta?
             </Text>
-            <Pressable onPress={() => router.push("LogIn")}>
+            <Pressable onPress={() => router.push("Auth/LogIn")}>
               <Text
                 style={{ fontSize: hp(1.8), paddingLeft: hp(1) }}
                 className="font-semibold text-emerald-500"

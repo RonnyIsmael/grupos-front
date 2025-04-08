@@ -11,7 +11,7 @@ const MainLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync("rgb(30, 41, 59)");
+    NavigationBar.setBackgroundColorAsync("rgb(15, 25, 42)");
     NavigationBar.setButtonStyleAsync("light");
     if (typeof isAuthenticated == "undefined") return;
     const inApp = segments[0] == "(tabs)";
