@@ -20,7 +20,7 @@ const CustomCardItem = ({ id, name, userNumbers, avatar, sport }: Props) => {
   const router = useRouter();
 
   const handlePress = () => {
-    router.navigate(`/grupo/${id}`);
+    router.navigate(`/(grupo)/${id}`);
   };
 
   return (

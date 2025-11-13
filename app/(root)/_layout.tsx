@@ -8,7 +8,7 @@ export default function ModalLayout() {
         options={{ headerShown: false }} // Desactivar cabecera superior para tabs
       />
       <Stack.Screen
-        name="grupo/[id]"
+        name="(grupo)/[id]"
         options={{
           presentation: "modal",
           headerTitle: "",
@@ -19,8 +19,22 @@ export default function ModalLayout() {
           headerTintColor: "#fff",
         }}
       />
+
       <Stack.Screen
-        name="grupo/Nuevo"
+        name="(grupo)/[id]/editarUsuarios"
+        options={{
+          presentation: "modal",
+          headerTitle: "",
+          animation: "ios_from_left",
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerStyle: { backgroundColor: "#0f172a" },
+          headerTintColor: "#fff",
+        }}
+      />
+
+      <Stack.Screen
+        name="(grupo)/nuevo"
         options={{
           headerLeft: () => null,
           headerBackVisible: false, // <-- Añadir esto

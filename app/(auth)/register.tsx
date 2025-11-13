@@ -1,4 +1,4 @@
-import { Alert, Pressable, Text, View, Dimensions } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,39 +9,59 @@ import CustomInputActions from "../../components/CustomInputOcticons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import Loading from "../../components/Loading";
-import CustomKeyboardView from "../../components/CustomKeyboardView";
 import { useAuth } from "../../context/authContext";
+import CustomKeyboardView from "../../components/CustomKeyboardView";
 
-const LogIn = () => {
+const register = () => {
   const router = useRouter();
+  const { setIsAuthenticated, register } = useAuth();
+  const {} = useAuth();
   const emailRef = useRef("");
   const passwordRef = useRef("");
-  const [loginTry, setLoginTry] = useState(false);
+  const userNameRef = useRef("");
+  const [registerTry, setRegisterTry] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
 
-  const handleLogin = async () => {
-    if (!emailRef.current || !passwordRef.current) {
-      setLoginTry(true);
+  const handleRegister = async () => {
+    if (!emailRef.current || !passwordRef.current || !userNameRef.current) {
+      setRegisterTry(true);
       return;
     } else {
       console.log("boton false");
-      setLoginTry(false);
+      setRegisterTry(false);
     }
 
     setLoading(true);
 
-    let response = await login(emailRef.current, passwordRef.current);
+    let response = await register(
+      userNameRef.current,
+      emailRef.current,
+      passwordRef.current
+    );
     setLoading(false);
+
     if (!response.succes) {
-      Alert.alert("No se pudo Acceder.");
+      Alert.alert("No se pudo registrar.");
+      return;
     }
+    Alert.alert(
+      "Notificación",
+      "Registro satisfactorio. Ya puede acceder a la aplicación",
+      [
+        {
+          text: "Aceptar",
+          onPress: () => {
+            setIsAuthenticated(true);
+          },
+        },
+      ]
+    );
   };
 
   return (
     <CustomKeyboardView>
       <StatusBar style="light" />
-      <View className="flex-1 bg-slate-900">
+      <View className="flex-1  bg-slate-900">
         <View
           style={{ paddingTop: wp(8), paddingHorizontal: wp(10) }}
           className="items-center"
@@ -66,9 +86,17 @@ const LogIn = () => {
             style={{ fontSize: hp(4) }}
             className="font-bold tracking-wider text-center text-neutral-200"
           >
-            Inicio de sesión
+            Registro
           </Text>
           <View className="gap-4">
+            <CustomInputActions
+              onChangeText={(value) => (userNameRef.current = value)}
+              iconName="person"
+              iconColor="#115242"
+              placeHolderName="Apodo"
+              placeholderColor="#d4d4d4"
+              textContentType="emailAddress"
+            />
             <CustomInputActions
               onChangeText={(value) => (emailRef.current = value)}
               iconName="mail"
@@ -86,52 +114,48 @@ const LogIn = () => {
               secureTextEntry={true}
               textContentType="password"
             />
-            {loginTry && (
+            {registerTry && (
               <Text
                 style={{ fontSize: hp(1.8) }}
                 className="font-semibold text-right text-red-400"
               >
-                Debe cumplimentar los campos
+                Debe cumplimentar todos los campos
               </Text>
             )}
-            <Text
-              style={{ fontSize: hp(1.8) }}
-              className="font-semibold text-right text-neutral-400"
-            >
-              ¿Has olvidado la contraseña?
-            </Text>
           </View>
-          <Pressable
-            onPress={handleLogin}
+
+          <View
             style={{ height: hp(6.5) }}
-            className=" flex active:bg-emerald-500 bg-emerald-400 rounded-xl justify-center items-center"
+            className="bg-emerald-400 rounded-xl justify-center items-center active:bg-emerald-500"
           >
             {loading ? (
               <View className="flex-row ">
                 <Loading />
               </View>
             ) : (
-              <Text
-                style={{ fontSize: hp(2.7) }}
-                className="text-neutral-900 font-bold tracking-wider "
-              >
-                Acceder
-              </Text>
+              <Pressable onPress={handleRegister}>
+                <Text
+                  style={{ fontSize: hp(2.7) }}
+                  className="text-neutral-700 font-bold tracking-wider "
+                >
+                  Registrarse
+                </Text>
+              </Pressable>
             )}
-          </Pressable>
+          </View>
           <View className="flex-row justify-center">
             <Text
               style={{ fontSize: hp(1.8) }}
               className="font-semibold text-neutral-400"
             >
-              ¿No tienes una cuenta?
+              ¿Ya tienes una cuenta?
             </Text>
-            <Pressable onPress={() => router.push("Auth/Register")}>
+            <Pressable onPress={() => router.push("Auth/LogIn")}>
               <Text
                 style={{ fontSize: hp(1.8), paddingLeft: hp(1) }}
                 className="font-semibold text-emerald-500"
               >
-                Regístrate
+                Inicia Sesión
               </Text>
             </Pressable>
           </View>
@@ -141,4 +165,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default register;

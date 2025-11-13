@@ -73,22 +73,24 @@ const DetalleGrupo = () => {
           transition={250}
         />
 
-        <Text className="text-2xl text-white font-bold">{grupo.name}</Text>
+        <Text className="text-2xl text-white font-bold text-center">
+          {grupo.name}
+        </Text>
         <Text className="text-gray-300">{grupo.sport}</Text>
       </View>
 
       <View className="flex-row justify-around px-10 my-4">
         <Pressable
           className="items-center"
-          onPress={() => router.push(`/grupo/${id}/editarUsuarios`)}
+          onPress={() => router.push(`/(grupo)/${id}/editarUsuarios`)}
         >
           <FontAwesome5 name="user-edit" size={24} color="#ffffff" />
-          <Text className="text-gray-300 mt-1">Usuarios</Text>
+          <Text className="text-gray-300 mt-1">Miembros</Text>
         </Pressable>
 
         <Pressable
           className="items-center"
-          onPress={() => router.push(`/grupo/${id}/iniciarJuego`)}
+          onPress={() => router.push(`/(grupo)/${id}/iniciarJuego`)}
         >
           <FontAwesome5 name="play-circle" size={24} color="#ffffff" />
           <Text className="text-gray-300 mt-1">Juego</Text>
@@ -96,7 +98,7 @@ const DetalleGrupo = () => {
 
         <Pressable
           className="items-center"
-          onPress={() => router.push(`/grupo/${id}/editarInfo`)}
+          onPress={() => router.push(`/(grupo)/${id}/editarInfo`)}
         >
           <FontAwesome5 name="edit" size={24} color="#ffffff" />
           <Text className="text-gray-300 mt-1">Editar</Text>

@@ -16,9 +16,9 @@ export default function _layout() {
       }}
     >
       <Tabs.Screen
-        name="Grupos"
+        name="grupos"
         options={{
-          header: () => <CustomHeader name="Grupos" />,
+          header: () => <CustomHeader name="grupos" />,
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
               name="th-list"
@@ -29,9 +29,9 @@ export default function _layout() {
         }}
       />
       <Tabs.Screen
-        name="Partidos"
+        name="partidos"
         options={{
-          header: () => <CustomHeader name="Partidos" />,
+          header: () => <CustomHeader name="partidos" />,
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
               name="motion-play"
@@ -42,9 +42,9 @@ export default function _layout() {
         }}
       />
       <Tabs.Screen
-        name="Amigos"
+        name="amigos"
         options={{
-          header: () => <CustomHeader name="Amigos" />,
+          header: () => <CustomHeader name="amigos" />,
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
               name="users"

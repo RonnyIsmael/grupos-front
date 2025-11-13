@@ -1,25 +1,13 @@
-import {
-  Alert,
-  Pressable,
-  Text,
-  View,
-  Dimensions,
-  InteractionManager,
-} from "react-native";
+import { Text, View } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomInputActions from "../../components/CustomInputOcticons";
-import { useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
 import Loading from "../../components/Loading";
-import CustomKeyboardView from "../../components/CustomKeyboardView";
-import { useAuth } from "../../context/authContext";
 
-const LoadApp = () => {
+const loadApp = () => {
   return (
     <View className="flex-1 bg-slate-900">
       <StatusBar style="light" />
@@ -50,4 +38,4 @@ const LoadApp = () => {
   );
 };
 
-export default LoadApp;
+export default loadApp;

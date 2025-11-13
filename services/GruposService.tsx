@@ -23,3 +23,7 @@ export const addUsersToGroup = async (params: any) => {
     JSON.stringify(params)
   );
 };
+
+export const obtenerUsuariosGrupo = async (groupId: number) => {
+  return await getRequest(`users/group/${groupId}`);
+};

@@ -1,7 +1,6 @@
 import {
   FlatList,
   View,
-  SafeAreaView,
   ActivityIndicator,
   RefreshControl,
   Switch,
@@ -16,8 +15,9 @@ import { StatusBar } from "expo-status-bar";
 import CustomCardItem from "../../../components/CustomCardItem";
 import { useFocusEffect, useRouter } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const Grupos = () => {
+const grupos = () => {
   const { user, isAuthenticated } = useAuth();
   const [data, setData] = useState<UserCountGroup[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,10 +51,6 @@ const Grupos = () => {
     }, [loadGrupos])
   );
 
-  useEffect(() => {
-    loadGrupos();
-  }, [loadGrupos]);
-
   const onRefresh = () => {
     setRefreshing(true);
     loadGrupos();
@@ -75,7 +71,7 @@ const Grupos = () => {
   return (
     <View className="flex-1 bg-slate-900">
       <StatusBar style="light" />
-      <SafeAreaView className="flex-1">
+      <SafeAreaProvider className="flex-1">
         <View className="flex-row justify-between items-center my-2 px-2">
           <Text className="text-lg text-slate-50 font-bold">Mis grupos</Text>
           <Switch
@@ -111,7 +107,7 @@ const Grupos = () => {
           />
         )}
         <TouchableOpacity
-          onPress={() => router.push("/grupo/Nuevo")}
+          onPress={() => router.push("/(grupo)/nuevo")}
           style={{
             position: "absolute",
             bottom: 30,
@@ -131,9 +127,9 @@ const Grupos = () => {
         >
           <MaterialIcons name="group-add" size={28} color="#ffffff" />
         </TouchableOpacity>
-      </SafeAreaView>
+      </SafeAreaProvider>
     </View>
   );
 };
 
-export default Grupos;
+export default grupos;

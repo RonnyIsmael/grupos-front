@@ -11,15 +11,15 @@ import { API_URL } from "../utils/config";
 import { useRouter } from "expo-router";
 
 interface AuthContextType {
-  user: User | null; // user ahora es de tipo User o null
+  user: User | null;
   isAuthenticated: boolean | undefined;
+  isLoading: boolean;
+  setIsAuthenticated: (state: boolean) => void;
+  setIsLoading: (state: boolean) => void;
   login: (email: string, password: string) => Promise<any>;
   register: (username: string, email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
-  setIsAuthenticated: (state: boolean) => void;
   session: () => Promise<void>;
-  setIsLoading: (state: boolean) => void;
-  isLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -31,10 +31,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
     undefined
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const router = useRouter();
-
   useEffect(() => {
-    router.replace("Auth/LoadApp");
     setTimeout(() => {
       session();
       console.log("Se comprueba sesion al abrir APP");
@@ -124,6 +121,7 @@ export const AuthContextProvider: React.FC<{ children?: ReactNode }> = ({
         setIsAuthenticated(false);
       }
     } catch (error) {
+      setUser(null);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);

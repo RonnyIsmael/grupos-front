@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const Partidos = () => {
+const partidos = () => {
   return (
     <View className="bg-slate-900">
       <Text>Partidos</Text>
@@ -9,4 +9,4 @@ const Partidos = () => {
   );
 };
 
-export default Partidos;
+export default partidos;

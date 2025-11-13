@@ -1,37 +1,79 @@
-import { Slot, useRouter, useSegments } from "expo-router";
+import {
+  Slot,
+  useRootNavigationState,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import "../global.css";
-import { useAuth, AuthContextProvider } from "../context/authContext";
-import { useEffect } from "react";
 import { MenuProvider } from "react-native-popup-menu";
-import * as NavigationBar from "expo-navigation-bar";
+import { AuthContextProvider, useAuth } from "@/context/authContext";
+import AuthRedirector from "@/components/AuthRedirector";
+import { useEffect, useRef } from "react";
+import { setOnUnauthorized } from "@/hooks/api";
+import { Alert } from "react-native";
 
-const MainLayout = () => {
-  const { isAuthenticated } = useAuth();
-  const segments = useSegments();
+function UnauthorizedBinder() {
+  const { logout, setIsAuthenticated } = useAuth() as any;
   const router = useRouter();
+  const nav = useRootNavigationState();
+  const segments = useSegments();
+
+  const routerRef = useRef(router);
+  const segmentsRef = useRef(segments);
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync("rgb(15, 25, 42)");
-    NavigationBar.setButtonStyleAsync("light");
-    if (typeof isAuthenticated == "undefined") return;
-    const inApp = segments[0] == "(tabs)";
-    if (isAuthenticated && !inApp) {
-      console.log("1");
-      router.replace("Grupos");
-    }
-    if (!isAuthenticated) {
-      console.log("2");
-      router.replace("Auth/LogIn");
-    }
-  }, [isAuthenticated]);
-  return <Slot />;
-};
+    routerRef.current = router;
+    segmentsRef.current = segments;
+  }, [router, segments]);
+
+  useEffect(() => {
+    // cuando la API devuelva 401, forzamos logout y
+    // el AuthRedirector nos llevará al login
+    const showingAlertRef = { current: false };
+
+    setOnUnauthorized(async () => {
+      if (showingAlertRef.current) return;
+      showingAlertRef.current = true;
+
+      try {
+        await logout();
+      } catch {}
+      setIsAuthenticated(false);
+      const currentSegments = segmentsRef.current;
+      const currentRouter = routerRef.current;
+      if (nav?.key && currentSegments[0] !== "(auth)") {
+        Alert.alert(
+          "Sesión caducada",
+          "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
+          [
+            {
+              text: "Aceptar",
+              onPress: () => {
+                currentRouter.replace("/(auth)/logIn");
+                setTimeout(() => {
+                  showingAlertRef.current = false;
+                }, 1000);
+              },
+            },
+          ]
+        );
+      } else {
+        showingAlertRef.current = false;
+      }
+    });
+  }, [logout, setIsAuthenticated]);
+
+  return null;
+}
 
 export default function RootLayout() {
   return (
     <MenuProvider>
       <AuthContextProvider>
-        <MainLayout></MainLayout>
+        {/* Vinculamos el handler 401 y montamos el watcher */}
+        <UnauthorizedBinder />
+        <AuthRedirector />
+        <Slot />
       </AuthContextProvider>
     </MenuProvider>
   );
