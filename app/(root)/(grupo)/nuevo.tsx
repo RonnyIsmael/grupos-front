@@ -29,6 +29,7 @@ import Loading from "../../../components/Loading";
 import { AddGroupResponse } from "../../../interfaces/GruposInterface";
 import { Image } from "expo-image";
 import { blurhash } from "../../../utils/commons";
+import CustomSelectableUserList from "@/components/CustomSelectableUserList";
 
 const UPLOAD_PRESET = Constants.expoConfig?.extra?.CLOUDINARY_UPLOAD_PRESET;
 
@@ -36,7 +37,7 @@ const MAX_SIZE_MB = 5;
 const MAX_WIDTH = 1024;
 const MAX_HEIGHT = 1024;
 
-const Nuevo = () => {
+const nuevo = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [fase, setFase] = useState("crearGrupo");
@@ -49,7 +50,6 @@ const Nuevo = () => {
   );
   const [newGroup, setNewGroup] = useState<number>();
   const [friends, setFriends] = useState<UserItem[]>([]);
-  const [busqueda, setBusqueda] = useState("");
 
   const nombreGrupoRef = useRef(nombreGrupo);
   const localUriRef = useRef(localUri);
@@ -153,8 +153,6 @@ const Nuevo = () => {
     }
   };
   const handleGuardarUsuarios = async () => {
-    // Aquí llamas a tu endpoint para guardar los usuarios seleccionados
-
     try {
       const response: any = await addUsersToGroup({
         group_id: newGroup,
@@ -167,7 +165,7 @@ const Nuevo = () => {
         {
           text: "Aceptar",
           onPress: () => {
-            router.replace("Grupos");
+            router.replace("grupos");
           },
         },
       ]);
@@ -245,56 +243,29 @@ const Nuevo = () => {
   if (fase === "agregarUsuarios") {
     return (
       <View className="flex-1 bg-slate-900 p-4">
-        <TextInput
+        <CustomSelectableUserList
+          data={friends}
+          loading={loading}
+          getId={(u) => u.id}
+          getTitle={(u) => u.user_name}
+          getAvatar={(u) => u.avatar}
+          selectedIds={usuariosSeleccionados}
+          onToggle={(id) => toggleSeleccionUsuario(id as number)}
           placeholder="Buscar amigos..."
-          placeholderTextColor="#aaa"
-          className="text-white border border-slate-700 rounded-lg p-3 mb-4"
-          value={busqueda}
-          onChangeText={setBusqueda}
+          iconSelectedName="sticker-check"
+          iconUnselectedName="sticker-check-outline"
+          iconColor="#10b981"
+          iconSize={25}
+          // si quieres un icono propio:
+          // renderRightIcon={(selected, item) => (
+          //   <MaterialCommunityIcons
+          //     name={selected ? "checkbox-marked-circle" : "checkbox-blank-circle-outline"}
+          //     size={24}
+          //     color={selected ? "#22c55e" : "#94a3b8"}
+          //   />
+          // )}
         />
-        {loading ? (
-          <View className="flex-1 justify-center items-center">
-            <ActivityIndicator size="large" color="#ffffff" />
-            <Text className="text-gray-200 mt-2">Cargando...</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={friends.filter((a) =>
-              a.user_name.toLowerCase().includes(busqueda.toLowerCase())
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <Pressable
-                className="flex-row items-center justify-between py-2"
-                onPress={() => toggleSeleccionUsuario(item.id)}
-              >
-                <View className="flex-row items-center">
-                  <Image
-                    source={{ uri: item.avatar }}
-                    style={{ height: hp(7), aspectRatio: 1, borderRadius: 100 }}
-                    placeholder={blurhash}
-                    transition={250}
-                  />
-                  <Text className="text-white ml-4">{item.user_name}</Text>
-                </View>
-                {usuariosSeleccionados.includes(item.id) ? (
-                  <MaterialCommunityIcons
-                    name="sticker-check"
-                    size={25}
-                    color="#10b981"
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="sticker-check-outline"
-                    size={25}
-                    color="#10b981"
-                  />
-                )}
-              </Pressable>
-            )}
-          />
-        )}
-        <View className="flex-row justify-between mb-4">
+        <View className="flex-row justify-between mb-4 mt-4">
           <Pressable
             onPress={() => router.back()}
             className="border border-white active:bg-slate-800 px-8 py-3 rounded-xl items-center flex-1 mr-2"
@@ -325,4 +296,4 @@ const Nuevo = () => {
   return null;
 };
 
-export default Nuevo;
+export default nuevo;

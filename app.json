@@ -29,7 +29,9 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font",
+      "expo-secure-store"
     ],
     "extra": {
       "router": {
@@ -39,8 +41,8 @@
         "projectId": "fd6a840e-a4f1-4e65-864d-cc90d33b8450"
       },
       "env": "DEV",
-      "CLOUDINARY_CLOUD_NAME":"dg8bvpkjz",
-      "CLOUDINARY_UPLOAD_PRESET":"groups-images"
+      "CLOUDINARY_CLOUD_NAME": "dg8bvpkjz",
+      "CLOUDINARY_UPLOAD_PRESET": "groups-images"
     },
     "newArchEnabled": true
   }

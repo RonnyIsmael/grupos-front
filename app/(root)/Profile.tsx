@@ -1,5 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { View, Text, Pressable } from "react-native";
 import { useAuth } from "../../context/authContext";
@@ -11,11 +11,17 @@ import { Image } from "expo-image";
 
 import { blurhash } from "../../utils/commons";
 
-export default function Profile() {
+export default function profile() {
   const { logout, user } = useAuth();
+  const router = useRouter();
   useEffect(() => {
     console.log(user);
-  });
+  }, [user]);
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/(auth)/logIn");
+  };
 
   return (
     <>
@@ -42,7 +48,7 @@ export default function Profile() {
           </Text>
 
           <Pressable
-            onPress={logout}
+            onPress={handleLogout}
             className="bg-red-500 mt-6 py-3 px-6 rounded-xl"
           >
             <Text className="text-white font-semibold">Cerrar sesión</Text>

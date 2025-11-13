@@ -19,7 +19,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ name }) => {
   const router = useRouter();
 
   const handleProfile = () => {
-    router.push("/Profile");
+    router.push("/profile");
   };
 
   const imageUrl = user?.avatar ? user.avatar : undefined;

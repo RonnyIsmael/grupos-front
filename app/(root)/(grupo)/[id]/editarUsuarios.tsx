@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useCallback, useState } from "react";
 import CustomSelectableUserList from "@/components/CustomSelectableUserList";
+import { useMembersGroup } from "@/hooks/useMembersGroup";
 import { useAuth } from "@/context/authContext";
-import { useFriends } from "@/hooks/useFriends";
 
-const amigos = () => {
+const editarUsuarios = () => {
   const { user } = useAuth();
-  const { friends, loading } = useFriends(user?.id);
+  const { members, loading } = useMembersGroup(user?.id);
   const [selected, setSelected] = useState<number[]>([]);
 
   const onToggle = useCallback(
@@ -18,11 +18,10 @@ const amigos = () => {
     },
     [selected]
   );
-
   return (
     <View className="flex-1 bg-slate-900 p-4">
       <CustomSelectableUserList
-        data={friends}
+        data={members}
         loading={loading}
         getId={(f) => f.id}
         getTitle={(f) => f.user_name}
@@ -36,22 +35,10 @@ const amigos = () => {
         iconSize={30}
       />
       <TouchableOpacity
-        style={{
-          position: "absolute",
-          bottom: 30,
-          backgroundColor: "#ef4444",
-          width: 100,
-          height: 35,
-          borderRadius: 23,
-          justifyContent: "center",
-          alignItems: "center",
-          alignSelf: "center",
-          elevation: 10,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 4,
-        }}
+        disabled={selected.length === 0}
+        className={`absolute bottom-9 w-24 h-9 rounded-full bg-red-500 
+          justify-center items-center self-center
+          ${selected.length === 0 ? "opacity-40" : "opacity-100"}`}
       >
         <View className="flex-row justify-center ">
           <Text className="text-lg font-bold text-slate-50">Eliminar</Text>
@@ -66,4 +53,4 @@ const amigos = () => {
   );
 };
 
-export default amigos;
+export default editarUsuarios;
